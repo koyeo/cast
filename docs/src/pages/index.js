@@ -30,7 +30,7 @@ export default function Home() {
     return (
         <Layout
             // title={`${siteConfig.title}`}
-            description="nest ci, nest 集成, nest 部署, nest 测试">
+            description="cast ci, cast 集成, cast 部署, cast 测试">
             <HomepageHeader/>
             <main>
                 <HomepageFeatures/>

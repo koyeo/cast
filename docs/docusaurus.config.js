@@ -6,15 +6,15 @@ const darkCodeTheme = require('prism-react-renderer/themes/okaidia');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-    title: 'Nest CI',
+    title: 'Cast CI',
     tagline: '适用于快速交付的本地集成和部署工具',
-    url: 'https://nest.kozilla.io',
+    url: 'https://cast.kozilla.io',
     baseUrl: '/',
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
     // favicon: 'img/favicon.ico',
     organizationName: 'koyeo', // Usually your GitHub org/user name.
-    projectName: 'nest', // Usually your repo name.
+    projectName: 'cast', // Usually your repo name.
 
     presets: [
         [
@@ -43,7 +43,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
             navbar: {
-                title: 'Nest CI',
+                title: 'Cast CI',
                 logo: {
                     alt: 'My Site Logo',
                     src: 'img/logo.png',
@@ -57,7 +57,7 @@ const config = {
                     },
                     // {to: '/blog', label: 'Blog', position: 'left'},
                     {
-                        href: 'https://github.com/koyeo/nest',
+                        href: 'https://github.com/koyeo/cast',
                         label: 'GitHub',
                         position: 'right',
                     },
@@ -106,7 +106,7 @@ const config = {
                 //         ],
                 //     },
                 // ],
-                copyright: `Copyright © ${new Date().getFullYear()} Nest`,
+                copyright: `Copyright © ${new Date().getFullYear()} Cast`,
             },
             prism: {
                 // theme: lightCodeTheme,

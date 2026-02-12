@@ -29,7 +29,7 @@ tasks:
   hi:
     comment: 打个招呼
     steps:
-      - run: echo "Hi! this is from nest~" 
+      - run: echo "Hi! this is from cast~" 
 ```
 
 ## 部署文件映射

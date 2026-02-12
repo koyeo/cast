@@ -8,14 +8,14 @@ sidebar_position: 3
 ## 初始化配置
 
 ```bash
-nest init
+cast init
 ```
 
-1. 如果目录下不存在 `nest.yml` 文件，则创建该文件。
-2. 在 `.gitignore` 添加 `.nest` 行，以忽略 Nest 临时工作目录。
+1. 如果目录下不存在 `cast.yml` 文件，则创建该文件。
+2. 在 `.gitignore` 添加 `.cast` 行，以忽略 Cast 临时工作目录。
 
 
-## 编辑 nest.yml
+## 编辑 cast.yml
 通过一些配置示例，实现如下功能：
 
 1. 本地完成构建。
@@ -48,11 +48,11 @@ tasks:
   hi:
     comment: 打个招呼
     steps:
-      - run: echo "Hi! this is from nest~" 
+      - run: echo "Hi! this is from cast~" 
 ```
 
 ## 执行任务
 
 ```
-nest run task-1
+cast run task-1
 ```

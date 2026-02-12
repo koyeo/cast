@@ -1,23 +1,23 @@
-# Nest
+# Cast
 
 适用于快速交付的本地集成和部署工具。
 
 ## 安装
 
 ```bash
-go install github.com/koyeo/nest@latest
+go install github.com/koyeo/cast@latest
 ```
 
-> 注： go install 将会把 nest 编译安装在 $GOPATH/bin 目录下， 安装前请检查 $GOPATH 指向位置，且是否添加的 $PATH 路径下。
+> 注： go install 将会把 cast 编译安装在 $GOPATH/bin 目录下， 安装前请检查 $GOPATH 指向位置，且是否添加的 $PATH 路径下。
 
 ## 初始化配置
 
 ```bash
-nest init
+cast init
 ```
 
-1. 如果目录下不存在 `nest.yml` 文件，则创建该文件。
-2. 在 `.gitignore` 添加 `.nest` 行，以忽略 Nest 临时工作目录。
+1. 如果目录下不存在 `cast.yml` 文件，则创建该文件。
+2. 在 `.gitignore` 添加 `.cast` 行，以忽略 Cast 临时工作目录。
 
 ## 第一个任务
 
@@ -27,7 +27,7 @@ nest init
 2. 将构建结果发布到服务器指定位置。
 3. 在服务器执行重启。
 
-**编辑 nest.yml：**
+**编辑 cast.yml：**
 
 ```yml
 version: 1.0
@@ -53,16 +53,16 @@ tasks:
   hi:
     comment: 打个招呼
     steps:
-      - run: echo "Hi! this is from nest~" 
+      - run: echo "Hi! this is from cast~" 
 ```
 
 **执行工作流：**
 
 ```
-nest run task-1
+cast run task-1
 ```
 
-更多用法参见文档：[https://nest.kozilla.io](https://nest.kozilla.io)。
+更多用法参见文档：[https://cast.kozilla.io](https://cast.kozilla.io)。
 
 ## 贡献
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
