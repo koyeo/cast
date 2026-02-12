@@ -10,8 +10,8 @@ import (
 
 var Cmd = &cobra.Command{
 	Use:   "init",
-	Short: "项目初始化",
-	Long:  `初始化 cast.yaml 文件，注入 .gitignore 配置`,
+	Short: "Initialize project / 项目初始化",
+	Long:  `Initialize cast.yaml and inject .gitignore config. / 初始化 cast.yaml 文件，注入 .gitignore 配置。`,
 	RunE:  initialize,
 }
 

@@ -14,7 +14,7 @@ import (
 // Cmd represents the run command
 var Cmd = &cobra.Command{
 	Use:   "list",
-	Short: "显示配置项",
+	Short: "List configuration / 显示配置项",
 	Run:   run,
 }
 

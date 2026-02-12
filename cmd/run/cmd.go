@@ -12,7 +12,7 @@ import (
 
 var Cmd = &cobra.Command{
 	Use:   "run",
-	Short: "执行任务",
+	Short: "Run tasks / 执行任务",
 	Run:   run,
 }
 
