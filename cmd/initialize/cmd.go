@@ -3,7 +3,7 @@ package initialize
 import (
 	"fmt"
 	"github.com/gozelle/_fs"
-	"github.com/koyeo/nest/common"
+	"github.com/koyeo/cast/common"
 	"github.com/spf13/cobra"
 	"strings"
 )
@@ -11,7 +11,7 @@ import (
 var Cmd = &cobra.Command{
 	Use:   "init",
 	Short: "项目初始化",
-	Long:  `初始化 nest.yml 文件，注入 .gitignore 配置`,
+	Long:  `初始化 cast.yml 文件，注入 .gitignore 配置`,
 	RunE:  initialize,
 }
 
@@ -50,9 +50,9 @@ func initialize(cmd *cobra.Command, args []string) (err error) {
 
 const tpl = `
 ##########################################################
-#                        Nest                            #
+#                        Cast                            #
 #            用于快速部署本地本地构建部署工具                 #
-#              https://nest.kozilla.io                   #
+#              https://cast.kozilla.io                   #
 ##########################################################
 version: 1.0
 servers:
@@ -68,7 +68,7 @@ tasks:
     comment: 第一个任务
     steps:
       - run: echo "Hi! this is from first task!"
-  # 任务名称 nest run 执行标识
+  # 任务名称 cast run 执行标识
   task-2:                                      
     # 任务注释
     comment: 第二个任务                       

@@ -1,6 +1,6 @@
 package common
 
 const (
-	DefaultConfigFile = "nest.yml"
-	TmpWorkspace      = ".nest"
+	DefaultConfigFile = "cast.yml"
+	TmpWorkspace      = ".cast"
 )

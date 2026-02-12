@@ -2,7 +2,7 @@ package upload
 
 import (
 	"fmt"
-	"github.com/koyeo/nest/logger"
+	"github.com/koyeo/cast/logger"
 	"github.com/pkg/sftp"
 	"github.com/spf13/cobra"
 	"github.com/ttacon/chalk"
@@ -210,7 +210,7 @@ func checkDistDir(sshClient *ssh.Client, dist string) (err error) {
 
 // 压缩本地源文件
 func compressSrc(src string) (err error) {
-	//target := fmt.Sprintf("%s/%s.tar.gz", PrepareGetNestTempDir(), path.Base(src))
+	//target := fmt.Sprintf("%s/%s.tar.gz", PrepareGetCastTempDir(), path.Base(src))
 	//err = execer.RunCommand("", "", fmt.Sprintf("tar -czf %s %s", target, src))
 	//if err != nil {
 	//	return
@@ -222,17 +222,17 @@ func compressSrc(src string) (err error) {
 func decompressDist() {
 	fmt.Println(uploadDist)
 }
-func GetNestTempDir() string {
-	return "./.nest/temp"
+func GetCastTempDir() string {
+	return "./.cast/temp"
 }
-func PrepareGetNestTempDir() string {
-	dir := GetNestTempDir()
+func PrepareGetCastTempDir() string {
+	dir := GetCastTempDir()
 	//if !storage.Exist(dir) {
 	//	storage.MakeDir(dir)
 	//}
 	return dir
 }
 
-func CleanNestTempDir() {
-	//_ = storage.Remove(GetNestTempDir())
+func CleanCastTempDir() {
+	//_ = storage.Remove(GetCastTempDir())
 }

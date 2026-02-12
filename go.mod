@@ -1,4 +1,4 @@
-module github.com/koyeo/nest
+module github.com/koyeo/cast
 
 go 1.18
 

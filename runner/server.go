@@ -5,10 +5,10 @@ import (
 	"github.com/gozelle/_color"
 	"github.com/gozelle/_exec"
 	"github.com/gozelle/_fs"
-	"github.com/koyeo/nest/logger"
-	"github.com/koyeo/nest/protocol"
-	"github.com/koyeo/nest/utils/_tar"
-	"github.com/koyeo/nest/utils/unit"
+	"github.com/koyeo/cast/logger"
+	"github.com/koyeo/cast/protocol"
+	"github.com/koyeo/cast/utils/_tar"
+	"github.com/koyeo/cast/utils/unit"
 	"os"
 	"path"
 	"path/filepath"
@@ -131,9 +131,9 @@ func (p *ServerRunner) Upload(source, target string) (err error) {
 		targetName = path.Base(target)
 	}
 	bundleName := fmt.Sprintf("%s.tar.gz", sourceName)
-	bundleLocalPath := fmt.Sprintf("%s/%s", NestTmpDir(), bundleName)
+	bundleLocalPath := fmt.Sprintf("%s/%s", CastTmpDir(), bundleName)
 	defer func() {
-		cleanNestTempDir()
+		cleanCastTempDir()
 	}()
 
 	bundleRemoteTmpName := fmt.Sprintf("bundle-%s~", bundleName)
@@ -218,7 +218,7 @@ func (p *ServerRunner) Upload(source, target string) (err error) {
 	fmt.Printf("\n")
 
 	// recover upload bundle
-	cmd = fmt.Sprintf("cd %s && rm -rf .nest && mkdir .nest && tar -xzf %s -C .nest", targetDir, bundleRemoteTmpName)
+	cmd = fmt.Sprintf("cd %s && rm -rf .cast && mkdir .cast && tar -xzf %s -C .cast", targetDir, bundleRemoteTmpName)
 	//fmt.Println(cmd)
 	err = p.CombinedExec(cmd)
 	if err != nil {
@@ -235,7 +235,7 @@ func (p *ServerRunner) Upload(source, target string) (err error) {
 			return
 		}
 	}
-	cmd = fmt.Sprintf("cd %s && mv .nest/%s ./%s && rm -rf .nest", targetDir, sourceName, targetName)
+	cmd = fmt.Sprintf("cd %s && mv .cast/%s ./%s && rm -rf .cast", targetDir, sourceName, targetName)
 	//fmt.Println(cmd)
 	err = p.CombinedExec(cmd)
 	if err != nil {
@@ -273,12 +273,12 @@ func (p *ServerRunner) PipeExec(command string) error {
 	return server.PipeExec(command)
 }
 
-func GetNestTempDir() string {
-	return "./.nest/tmp"
+func GetCastTempDir() string {
+	return "./.cast/tmp"
 }
 
-func NestTmpDir() string {
-	dir := GetNestTempDir()
+func CastTmpDir() string {
+	dir := GetCastTempDir()
 	ok, err := _fs.Exists(dir)
 	if err == nil && !ok {
 		_ = _fs.MakeDir(dir)
@@ -286,6 +286,6 @@ func NestTmpDir() string {
 	return dir
 }
 
-func cleanNestTempDir() {
-	_ = _fs.Remove(GetNestTempDir())
+func cleanCastTempDir() {
+	_ = _fs.Remove(GetCastTempDir())
 }
