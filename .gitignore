@@ -1,5 +1,9 @@
 .DS_Store
 .idea
-nest
 /tmp
-.nest
+.cast
+
+.agent/*
+!.agent/rules
+!.agent/skills
+!.agent/workflows   

@@ -1,10 +1,14 @@
 package runner
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"github.com/gozelle/_color"
 	"github.com/gozelle/_exec"
 	"github.com/gozelle/_fs"
+	"github.com/koyeo/cast/config"
+	application "github.com/koyeo/cast/deploy/application"
+	infra "github.com/koyeo/cast/deploy/infrastructure"
 	"github.com/koyeo/cast/logger"
 	"github.com/koyeo/cast/protocol"
 	"github.com/koyeo/cast/utils/_tar"
@@ -138,16 +142,9 @@ func (p *ServerRunner) Upload(source, target string) (err error) {
 
 	bundleRemoteTmpName := fmt.Sprintf("bundle-%s~", bundleName)
 	bundleRemoteTmpPath := fmt.Sprintf("%s/%s", targetDir, bundleRemoteTmpName)
-	var cmd string
 
-	// compress source
-	//cmd = fmt.Sprintf("tar -czf %s -C %s %s", bundleLocalPath, filepath.Join(source, "../"), path.Base(source))
-	//fmt.Println(cmd)
-	//_, err = _exec.NewRunner().AddCommand(cmd).CombinedOutput()
-	//if err != nil {
-	//	err = fmt.Errorf("compress source error: %s", err)
-	//}
-	// 通过 golang 的 tar 包压缩文件，解决向 linux 和 mac 的不兼容问题，此处还需要多加测试
+
+	// compress source using Go tar (cross-platform compatible)
 	sourceFile, err := os.Open(source)
 	if err != nil {
 		err = fmt.Errorf("open source error: %s", err)
@@ -162,6 +159,15 @@ func (p *ServerRunner) Upload(source, target string) (err error) {
 		err = fmt.Errorf("compress source error: %s", err)
 		return
 	}
+
+	// compute local bundle hash
+	bundleData, err := os.ReadFile(bundleLocalPath)
+	if err != nil {
+		err = fmt.Errorf("read local bundle error: %s", err)
+		return
+	}
+	bundleHashSum := sha256.Sum256(bundleData)
+	bundleHash := fmt.Sprintf("%x", bundleHashSum[:])
 
 	// upload
 	bundleLocalFile, err := os.Open(bundleLocalPath)
@@ -217,29 +223,18 @@ func (p *ServerRunner) Upload(source, target string) (err error) {
 	}
 	fmt.Printf("\n")
 
-	// recover upload bundle
-	cmd = fmt.Sprintf("cd %s && rm -rf .cast && mkdir .cast && tar -xzf %s -C .cast", targetDir, bundleRemoteTmpName)
-	//fmt.Println(cmd)
-	err = p.CombinedExec(cmd)
+	// === Deploy via DDD Service ===
+	cfg := config.Load()
+	lang := cfg.Lang
+
+	remoteFS := infra.NewSSHRemoteFS(server)
+	remoteExec := infra.NewSSHRemoteExec(server)
+	snapshotRepo := infra.NewSnapshotRepo(remoteFS)
+	prompter := infra.NewStdinPrompter()
+	deploySvc := application.NewDeployService(remoteFS, remoteExec, snapshotRepo, prompter, lang)
+
+	err = deploySvc.Deploy(bundleRemoteTmpPath, targetDir, bundleName, bundleHash)
 	if err != nil {
-		err = fmt.Errorf("recover upload bunle error: %s", err)
-		return
-	}
-	_, err = server.SFTPClient().Stat(filepath.Join(targetDir, targetName))
-	if err == nil {
-		cmd = fmt.Sprintf("cd %s && rm -rf ./%s", targetDir, targetName)
-		//fmt.Println(cmd)
-		err = p.CombinedExec(cmd)
-		if err != nil {
-			err = fmt.Errorf("create target backup error: %s", err)
-			return
-		}
-	}
-	cmd = fmt.Sprintf("cd %s && mv .cast/%s ./%s && rm -rf .cast", targetDir, sourceName, targetName)
-	//fmt.Println(cmd)
-	err = p.CombinedExec(cmd)
-	if err != nil {
-		err = fmt.Errorf("mv upload bunle to target error: %s", err)
 		return
 	}
 
@@ -289,3 +284,4 @@ func CastTmpDir() string {
 func cleanCastTempDir() {
 	_ = _fs.Remove(GetCastTempDir())
 }
+
