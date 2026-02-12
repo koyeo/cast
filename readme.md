@@ -1,73 +1,160 @@
+<p align="center">
+  <img src="./logo.png" alt="Cast" width="200" />
+</p>
+
 # Cast
 
-适用于快速交付的本地集成和部署工具。
+[中文文档](./README_zh.md)
 
-## 安装
+A lightweight local CI/CD tool for rapid integration and deployment.
+
+## Why Cast?
+
+There are many CI/CD tools out there — Jenkins, GitHub Actions, Makefile, Ansible, Travis CI, etc. But they're often too heavy for quick delivery:
+
+- **Jenkins** requires a full server deployment and web UI.
+- **GitHub Actions / Travis CI** are platform-specific.
+- **Ansible + Makefile** need to be configured together every time.
+
+Cast solves these pain points with a single config file and CLI.
+
+### Best For
+
+- Solo full-stack developers who want fast feedback loops.
+- Quick deployments of frontend/backend projects to servers.
+
+### Not Ideal For
+
+- Multi-person production environments requiring strict release management.
+
+## Installation
 
 ```bash
 go install github.com/koyeo/cast@latest
 ```
 
-> 注： go install 将会把 cast 编译安装在 $GOPATH/bin 目录下， 安装前请检查 $GOPATH 指向位置，且是否添加的 $PATH 路径下。
+> **Note:** `go install` compiles and installs the `cast` binary to `$GOPATH/bin`. Make sure `$GOPATH/bin` is in your `$PATH`.
 
-## 初始化配置
+## Quick Start
+
+### 1. Initialize Configuration
 
 ```bash
 cast init
 ```
 
-1. 如果目录下不存在 `cast.yml` 文件，则创建该文件。
-2. 在 `.gitignore` 添加 `.cast` 行，以忽略 Cast 临时工作目录。
+This will:
+1. Create a `cast.yaml` file if it doesn't exist.
+2. Add `.cast` to `.gitignore` to ignore the temporary workspace.
 
-## 第一个任务
+You can also specify a custom config file name:
 
-通过一些配置示例，实现如下功能：
+```bash
+cast init cast.production.yml
+```
 
-1. 本地完成构建。
-2. 将构建结果发布到服务器指定位置。
-3. 在服务器执行重启。
+### 2. Edit `cast.yaml`
 
-**编辑 cast.yml：**
+Here's an example that builds locally, deploys to a server, and restarts the service:
 
-```yml
+```yaml
 version: 1.0
 servers:
   server-1:
-    comment: 示例服务器
+    comment: Example server
     host: 192.168.1.10
-    user: root                                 # 默认使用 ~/.ssh/id_rsa 私钥进行认证
+    user: root                                 # Uses ~/.ssh/id_rsa by default
 tasks:
-  task-1:                                      # 任务名称
-    comment: 示例任务                           # 任务注释
+  task-1:                                      # Task name
+    comment: Example task                      # Task description
     steps:
-      - run: go build -o foo foo.go            # 本地执行构建
+      - use: hi                                # Inherit steps from "hi" task
+      - run: go build -o foo foo.go            # Build locally
       - deploy:
           servers:
-            - use: server-1                    # 部署服务器
+            - use: server-1                    # Target server
           mappers:
-            - source: ./foo                    # 本地文件路径
-              target: /app/foo/bin/foo         # 服务器存放位置
+            - source: ./foo                    # Local file
+              target: /app/foo/bin/foo         # Remote destination
           executes:
-            - run: supervisorctl restart foo   # 服务器重启服务
-      - run: rm foo                            # 本地清理
+            - run: supervisorctl restart foo   # Restart service on server
+      - run: rm foo                            # Local cleanup
   hi:
-    comment: 打个招呼
+    comment: Say hello
     steps:
-      - run: echo "Hi! this is from cast~" 
+      - run: echo "Hi! this is from cast~"
 ```
 
-**执行工作流：**
+### 3. Run a Task
 
-```
+```bash
 cast run task-1
 ```
 
-更多用法参见文档：[https://cast.kozilla.io](https://cast.kozilla.io)。
+Run multiple tasks:
 
-## 贡献
+```bash
+cast run task-1 hi
+```
+
+## CLI Reference
+
+### `cast init`
+
+Initialize the `cast.yaml` config file and update `.gitignore`.
+
+### `cast run <task...>`
+
+Execute one or more tasks by name.
+
+### `cast list`
+
+List all configured resources including tasks, servers, and environment variables.
+
+## Configuration Reference
+
+### Servers
+
+```yaml
+servers:
+  server_1:                         # Server identifier (used in deploy tasks)
+    comment: My server              # Description
+    host: 192.168.1.5               # Server address
+    port: 2222                      # Port (default: 22)
+    user: root                      # Username
+    password: 123456                # Password (alternative to identity_file)
+    identity_file: ~/.ssh/id_rsa    # Private key file (default: ~/.ssh/id_rsa)
+```
+
+### Environment Variables
+
+```yaml
+envs:
+  k1: v1                            # Global key-value environment variables
+  k2: v2
+```
+
+### Deploy File Mapping
+
+| source  | target            | Remote result             |
+|:--------|:------------------|:--------------------------|
+| `file1` | `/app/test/file1` | `/app/test/file1`         |
+| `file1` | `/app/test/file2` | `/app/test/file2`         |
+| `file1` | `/app/test`       | `/app/test`               |
+| `file1` | `/app/test/`      | `/app/test/file1`         |
+| `dir1`  | `/app/test/dir2`  | `/app/test/dir2`          |
+| `dir1`  | `/app/test/dir2/` | `/app/test/dir1/dir2`     |
+| `dir1`  | `/app/test/`      | `/app/test/dir1`          |
+| `dir1`  | `/app/test`       | `/app/test`               |
+
+## Feedback
+
+For questions, contributions, or more information, reach out via email: koyeo@qq.com.
+
+## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Please make sure to update tests as appropriate.
-
 ## License
+
 [MIT](https://choosealicense.com/licenses/mit/)

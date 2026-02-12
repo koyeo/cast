@@ -1,6 +1,6 @@
 package common
 
 const (
-	DefaultConfigFile = "cast.yml"
+	DefaultConfigFile = "cast.yaml"
 	TmpWorkspace      = ".cast"
 )

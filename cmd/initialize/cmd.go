@@ -11,7 +11,7 @@ import (
 var Cmd = &cobra.Command{
 	Use:   "init",
 	Short: "项目初始化",
-	Long:  `初始化 cast.yml 文件，注入 .gitignore 配置`,
+	Long:  `初始化 cast.yaml 文件，注入 .gitignore 配置`,
 	RunE:  initialize,
 }
 
@@ -52,7 +52,6 @@ const tpl = `
 ##########################################################
 #                        Cast                            #
 #            用于快速部署本地本地构建部署工具                 #
-#              https://cast.kozilla.io                   #
 ##########################################################
 version: 1.0
 servers:
